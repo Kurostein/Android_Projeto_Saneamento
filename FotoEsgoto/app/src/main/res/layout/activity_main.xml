@@ -25,4 +25,38 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioBtnGroupProblem"
+        android:orientation="vertical"
+        android:layout_below="@+id/btnInicio"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignRight="@+id/edtTextUser"
+        android:layout_alignEnd="@+id/edtTextUser">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opt 1"
+            android:id="@+id/radioButtonProblem1"
+            android:layout_marginTop="56dp"
+            android:layout_below="@+id/btnInicio"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opt 2"
+            android:id="@+id/radioButtonProblem2"
+            android:layout_below="@+id/radioButtonProblem1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+    </RadioGroup>
+
 </RelativeLayout>
