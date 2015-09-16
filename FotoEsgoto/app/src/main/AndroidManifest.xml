@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UserDataScreen"
+            android:label="@string/title_activity_user_data_screen" >
+        </activity>
+        <activity
+            android:name=".PhotoDataScreen"
+            android:label="@string/title_activity_photo_data_screen" >
+        </activity>
+        <activity
+            android:name=".ProblemDataScreen"
+            android:label="@string/title_activity_problem_data_screen" >
+        </activity>
     </application>
 
 </manifest>

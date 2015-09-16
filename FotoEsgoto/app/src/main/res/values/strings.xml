@@ -1,6 +1,24 @@
 <resources>
     <string name="app_name">Foto Esgoto</string>
+    <string name="title_activity_user_data_screen">Foto Esgoto</string>
+    <string name="title_activity_photo_data_screen">Foto Esgoto</string>
+    <string name="title_activity_problem_data_screen">Foto Esgoto</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="label_bemvindo">Bem Vindo!</string>
+    <string name="label_escolha_opcao">Escolha uma opção:</string>
+    <string name="btn_label_reportar_problema">Reportar Problema!</string>
+    <string name="label_digite_cpf">Digite seu CPF:</string>
+    <string name="btn_label_avancar">Avançar</string>
+    <string name="label_foto_tirar">Tire uma foto do problema:</string>
+    <string name="label_foto_galeria">Escolha uma foto da galeria:</string>
+    <string name="btn_label_camera">Tirar Foto!</string>
+    <string name="btn_label_galeria">Galeria!</string>
+    <string name="label_endereco">Endereço:</string>
+    <string name="label_bairro">Bairro:</string>
+    <string name="label_complemento">Complemento:</string>
+    <string name="label_cep">CEP:</string>
+    <string name="btn_label_concluir">Concluir!</string>
+
 </resources>

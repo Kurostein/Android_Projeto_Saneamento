@@ -1,7 +1,5 @@
 package br.com.lorencity.fotoesgoto;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,30 +7,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class PhotoDataScreen extends AppCompatActivity implements View.OnClickListener{
 
-    private Button btnReport;
+    private Button btnCamera;
+    private Button btnGaleria;
+    private Button btnAvancar2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_photo_data_screen);
 
-        btnReport = (Button) findViewById(R.id.btnInicio);
-        btnReport.setOnClickListener(this);
+        btnCamera = (Button) findViewById(R.id.btnCamera);
+        btnGaleria = (Button) findViewById(R.id.btnGaleria);
+
+        //verificar se os parametros foram passados
+
+        btnCamera.setOnClickListener(new EventCamera());
+        btnGaleria.setOnClickListener(new EventGallery());
+
+        btnAvancar2.setOnClickListener(this);
     }
 
-    public void onClick (View v){
-        Intent intent = new Intent(this, UserDataScreen.class);
+    public void onClick(View v){
+        Intent intent = new Intent(this, ProblemDataScreen.class);
+
         startActivity(intent);
+        finish();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_photo_data_screen, menu);
         return true;
     }
 
