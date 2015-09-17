@@ -16,7 +16,7 @@ import java.security.InvalidParameterException;
 
 public class ProblemDataScreen extends AppCompatActivity implements View.OnClickListener{
 
-    private Button btnConcluir;
+    private Button btnAvancar3;
     private EditText fieldEndereco;
     private EditText fieldBairro;
     private EditText fieldComplemento;
@@ -40,8 +40,8 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
         //verificar se os parametros existem
 
-        btnConcluir = (Button) findViewById(R.id.btnConcluir);
-        btnConcluir.setOnClickListener(this);
+        btnAvancar3 = (Button) findViewById(R.id.btnAvancar3);
+        btnAvancar3.setOnClickListener(this);
 
 
         adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
