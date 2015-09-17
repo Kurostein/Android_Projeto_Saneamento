@@ -3,6 +3,8 @@ package br.com.lorencity.fotoesgoto;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -60,7 +62,10 @@ public class ResumeDataScreen extends AppCompatActivity implements View.OnClickL
             txtBairro.setText(bundle.getString("VALUE_BAIRRO"));
             txtComplemento.setText(bundle.getString("VALUE_COMPLEMENTO"));
             txtCEP.setText(bundle.getString("VALUE_CEP"));
-            //imgCamera.setImageBitmap(bitmapImg);
+
+            byte[] imgByteArray = bundle.getByteArray("IMG_BYTE_ARRAY");
+            Bitmap img = BitmapFactory.decodeByteArray(imgByteArray, 0, imgByteArray.length);
+            imgCamera.setImageBitmap(img);
 
         }catch(InvalidParameterException e){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
