@@ -27,7 +27,10 @@ public class UserDataScreen extends AppCompatActivity implements View.OnClickLis
 
     public void onClick(View v){
         Intent intent = new Intent(this, PhotoDataScreen.class);
-        intent.putExtra("VALUE_CPF", fieldCpf.getText().toString());
+        Bundle bundle = new Bundle();
+
+        bundle.putString("VALUE_CPF", fieldCpf.getText().toString());
+        intent.putExtra("BUNDLE", bundle);
         startActivity(intent);
         finish();
     }

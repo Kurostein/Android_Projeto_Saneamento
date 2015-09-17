@@ -1,5 +1,6 @@
 package br.com.lorencity.fotoesgoto;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.security.InvalidParameterException;
+
 public class PhotoDataScreen extends AppCompatActivity implements View.OnClickListener{
 
     private Button btnCamera;
     private Button btnGaleria;
-    private Button btnAvancar2;
+    private Bundle bundle;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +28,43 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
 
         //verificar se os parametros foram passados
 
-        btnCamera.setOnClickListener(new EventCamera());
-        btnGaleria.setOnClickListener(new EventGallery());
+        btnCamera.setOnClickListener(this);
+        btnGaleria.setOnClickListener(this);
 
-        btnAvancar2.setOnClickListener(this);
+        intent = getIntent();
+
     }
 
     public void onClick(View v){
-        Intent intent = new Intent(this, ProblemDataScreen.class);
+        if(v == btnCamera){
+            
+        }else if(v == btnGaleria){
 
-        startActivity(intent);
-        finish();
+        }
+
+        try{
+            if(!intent.hasExtra("BUNDLE")){
+                throw new InvalidParameterException("Parâmetro não encontrado!");
+            }
+
+            bundle = intent.getBundleExtra("BUNDLE");
+
+            //coloca a imagem como um Array de Bytes no bundle
+
+            intent.putExtra("BUNDLE", bundle);
+            intent.setClass(this, ProblemDataScreen.class);
+
+            startActivity(intent);
+            finish();
+
+        }catch(InvalidParameterException e){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage(e.getMessage());
+            alert.setNeutralButton("Ok", null);
+            alert.show();
+            return;
+        }
+
     }
 
     @Override

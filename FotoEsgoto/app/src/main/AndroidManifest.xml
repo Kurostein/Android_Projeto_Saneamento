@@ -28,6 +28,10 @@
             android:name=".ProblemDataScreen"
             android:label="@string/title_activity_problem_data_screen" >
         </activity>
+        <activity
+            android:name=".ResumeDataScreen"
+            android:label="@string/title_activity_resume_data_screen" >
+        </activity>
     </application>
 
 </manifest>
