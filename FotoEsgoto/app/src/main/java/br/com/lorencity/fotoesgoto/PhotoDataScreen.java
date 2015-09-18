@@ -58,37 +58,41 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
         }else if(v == btnGaleria){
 
         }else if(v == btnAvancar2){
-            setImgToBundle();
-            intent.setClass(this, ProblemDataScreen.class);
+            try{
+                setImgToBundle();
 
-            startActivity(intent);
-            finish();
+                intent.setClass(this, ProblemDataScreen.class);
+
+                startActivity(intent);
+                finish();
+
+            }catch(InvalidParameterException e){
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage(e.getMessage());
+                alert.setNeutralButton("Ok", null);
+                alert.show();
+                return;
+            }
         }
-
     }
 
     private void setImgToBundle() {
-        try {
             if (!intent.hasExtra("BUNDLE")) {
                 throw new InvalidParameterException("Parâmetro não encontrado!");
             }
 
             bundle = intent.getBundleExtra("BUNDLE");
 
-            ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
-            bitmapImg.compress(Bitmap.CompressFormat.JPEG, 50, imgOutput);
-            bundle.putByteArray("IMG_BYTE_ARRAY", imgOutput.toByteArray());
-            //coloca a imagem como um Array de Bytes no bundle
+            if(bitmapImg != null){
+                ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
+                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 50, imgOutput);
+                bundle.putByteArray("IMG_BYTE_ARRAY", imgOutput.toByteArray());
+                //coloca a imagem como um Array de Bytes no bundle
+            }else{
+                throw new InvalidParameterException("Adicione uma foto do problema!");
+            }
 
             intent.putExtra("BUNDLE", bundle);
-
-        }catch(InvalidParameterException e){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.setNeutralButton("Ok", null);
-            alert.show();
-            return;
-        }
     }
 
 
