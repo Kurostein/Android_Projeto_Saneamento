@@ -126,8 +126,8 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
                  int indice = cursor.getColumnIndex(colunas[0]);
                  String path = cursor.getString(indice);
                  cursor.close();
-                 Bitmap bitmap = BitmapFactory.decodeFile(path);
-                 imgFoto.setImageBitmap(bitmap);
+                  bitmapImg = BitmapFactory.decodeFile(path);
+                 imgFoto.setImageBitmap(bitmapImg);
              }
         }
 
