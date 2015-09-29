@@ -115,6 +115,21 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "Saiu", Toast.LENGTH_SHORT);
             }
 
+<<<<<<< HEAD:SANIT/app/src/main/java/br/com/lorencity/fotoesgoto/PhotoDataScreen.java
+=======
+        }else if(requestCode == GALERIA_FOTO){
+             if(resultCode == RESULT_OK){
+                 Uri image_galeria = data.getData();
+                 String[] colunas =  {MediaStore.Images.Media.DATA};
+                 Cursor cursor = getContentResolver().query(image_galeria,colunas,null,null,null);
+                 cursor.moveToFirst();
+                 int indice = cursor.getColumnIndex(colunas[0]);
+                 String path = cursor.getString(indice);
+                 cursor.close();
+                  bitmapImg = BitmapFactory.decodeFile(path);
+                 imgFoto.setImageBitmap(bitmapImg);
+             }
+>>>>>>> diego:SANIT/app/src/main/java/br/com/lorencity/fotoesgoto/PhotoDataScreen.java
         }
     }
 
