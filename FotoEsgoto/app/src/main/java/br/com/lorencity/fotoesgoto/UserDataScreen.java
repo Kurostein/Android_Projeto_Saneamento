@@ -18,8 +18,8 @@ public class UserDataScreen extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data_screen);
-
         fieldCpf = (EditText) findViewById(R.id.fieldCpf);
+        fieldCpf.addTextChangedListener(Mask.insert(Mask.CPF_MASK,fieldCpf));
         btnAvancar1 = (Button) findViewById(R.id.btnAvancar1);
         btnAvancar1.setOnClickListener(this);
 
@@ -27,7 +27,10 @@ public class UserDataScreen extends AppCompatActivity implements View.OnClickLis
 
     public void onClick(View v){
         Intent intent = new Intent(this, PhotoDataScreen.class);
-        intent.putExtra("VALUE_CPF", fieldCpf.getText().toString());
+        Bundle bundle = new Bundle();
+
+        bundle.putString("VALUE_CPF", fieldCpf.getText().toString());
+        intent.putExtra("BUNDLE", bundle);
         startActivity(intent);
         finish();
     }

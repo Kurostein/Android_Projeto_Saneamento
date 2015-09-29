@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnReport = (Button) findViewById(R.id.btnInicio);
+        btnReport = (Button) findViewById(R.id.btnReport);
         btnReport.setOnClickListener(this);
     }
 

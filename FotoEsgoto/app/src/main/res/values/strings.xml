@@ -20,5 +20,8 @@
     <string name="label_complemento">Complemento:</string>
     <string name="label_cep">CEP:</string>
     <string name="btn_label_concluir">Concluir!</string>
+    <string name="title_activity_resume_data_screen">Foto Esgoto</string>
+    <string name="label_resumo_info">Resumo de Informações:</string>
+    <string name="label_tipo_problema">Tipo de Problema:</string>
 
 </resources>
