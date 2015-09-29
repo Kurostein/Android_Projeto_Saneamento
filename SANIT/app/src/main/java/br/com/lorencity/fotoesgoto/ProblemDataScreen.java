@@ -36,7 +36,6 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         fieldBairro = (EditText) findViewById(R.id.fieldBairro);
         fieldComplemento = (EditText) findViewById(R.id.fieldComplemento);
         fieldCep = (EditText) findViewById(R.id.fieldCep);
-        fieldCep.addTextChangedListener(Mask.insert(Mask.CEP_MASK,fieldCep));
         spnTipoProblema = (Spinner) findViewById(R.id.spnTipoProblema);
 
         //verificar se os parametros existem
@@ -47,8 +46,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
         adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adpTipoProblema.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adpTipoProblema.add("Vazamento de água");
-        adpTipoProblema.add("Vazamento de esgoto");
+        adpTipoProblema.addAll("Vazamento de água", "Vazamento de esgoto");
         spnTipoProblema.setAdapter(adpTipoProblema);
 
         intent = getIntent();

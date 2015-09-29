@@ -2,10 +2,7 @@ package br.com.lorencity.fotoesgoto;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,7 +28,6 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
     private ImageView imgFoto;
 
     private static final int TIRAR_FOTO = 10203;
-    private static final int GALERIA_FOTO = 10204;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,41 +56,43 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(it, TIRAR_FOTO);
 
         }else if(v == btnGaleria){
-            Intent galeria = new Intent(Intent.ACTION_GET_CONTENT);
-            galeria.setType("image/*");
-            startActivityForResult(galeria, GALERIA_FOTO);
+
         }else if(v == btnAvancar2){
-            setImgToBundle();
-            intent.setClass(this, ProblemDataScreen.class);
+            try{
+                setImgToBundle();
 
-            startActivity(intent);
-            finish();
+                intent.setClass(this, ProblemDataScreen.class);
+
+                startActivity(intent);
+                finish();
+
+            }catch(InvalidParameterException e){
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage(e.getMessage());
+                alert.setNeutralButton("Ok", null);
+                alert.show();
+                return;
+            }
         }
-
     }
 
     private void setImgToBundle() {
-        try {
             if (!intent.hasExtra("BUNDLE")) {
                 throw new InvalidParameterException("Parâmetro não encontrado!");
             }
 
             bundle = intent.getBundleExtra("BUNDLE");
 
-            ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
-            bitmapImg.compress(Bitmap.CompressFormat.JPEG, 50, imgOutput);
-            bundle.putByteArray("IMG_BYTE_ARRAY", imgOutput.toByteArray());
-            //coloca a imagem como um Array de Bytes no bundle
+            if(bitmapImg != null){
+                ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
+                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 50, imgOutput);
+                bundle.putByteArray("IMG_BYTE_ARRAY", imgOutput.toByteArray());
+                //coloca a imagem como um Array de Bytes no bundle
+            }else{
+                throw new InvalidParameterException("Adicione uma foto do problema!");
+            }
 
             intent.putExtra("BUNDLE", bundle);
-
-        }catch(InvalidParameterException e){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.setNeutralButton("Ok", null);
-            alert.show();
-            return;
-        }
     }
 
 
@@ -117,21 +115,7 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "Saiu", Toast.LENGTH_SHORT);
             }
 
-        }else if(requestCode == GALERIA_FOTO){
-             if(resultCode == RESULT_OK){
-                 Uri image_galeria = data.getData();
-                 String[] colunas =  {MediaStore.Images.Media.DATA};
-                 Cursor cursor = getContentResolver().query(image_galeria,colunas,null,null,null);
-                 cursor.moveToFirst();
-                 int indice = cursor.getColumnIndex(colunas[0]);
-                 String path = cursor.getString(indice);
-                 cursor.close();
-                 Bitmap bitmap = BitmapFactory.decodeFile(path);
-                 imgFoto.setImageBitmap(bitmap);
-             }
         }
-
-
     }
 
     @Override

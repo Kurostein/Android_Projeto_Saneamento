@@ -105,7 +105,7 @@ public class ResumeDataScreen extends AppCompatActivity implements View.OnClickL
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage("Problema reportado com sucesso! Obrigado!!");
-        alert.setNeutralButton("Yay!", new AlertDialog.OnClickListener(){
+        alert.setNeutralButton("Ok!", new AlertDialog.OnClickListener(){
             public void onClick(DialogInterface d, int i){
                 finish();
             }
