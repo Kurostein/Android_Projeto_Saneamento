@@ -1,8 +1,10 @@
 package br.com.lorencity.fotoesgoto;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.net.Uri;
+import android.database.Cursor;
 
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
 
-public class PhotoDataScreen extends AppCompatActivity implements View.OnClickListener{
+public class PhotoDataScreen extends Activity implements View.OnClickListener{
 
     private Button btnCamera;
     private Button btnGaleria;
@@ -28,6 +32,7 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
     private ImageView imgFoto;
 
     private static final int TIRAR_FOTO = 10203;
+    private static final int GALERIA_FOTO = 10204;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,9 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(it, TIRAR_FOTO);
 
         }else if(v == btnGaleria){
-
+            Intent galeria = new Intent(Intent.ACTION_GET_CONTENT);
+            galeria.setType("image/*");
+            startActivityForResult(galeria, GALERIA_FOTO);
         }else if(v == btnAvancar2){
             try{
                 setImgToBundle();
@@ -115,8 +122,6 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "Saiu", Toast.LENGTH_SHORT);
             }
 
-<<<<<<< HEAD:SANIT/app/src/main/java/br/com/lorencity/fotoesgoto/PhotoDataScreen.java
-=======
         }else if(requestCode == GALERIA_FOTO){
              if(resultCode == RESULT_OK){
                  Uri image_galeria = data.getData();
@@ -129,7 +134,7 @@ public class PhotoDataScreen extends AppCompatActivity implements View.OnClickLi
                   bitmapImg = BitmapFactory.decodeFile(path);
                  imgFoto.setImageBitmap(bitmapImg);
              }
->>>>>>> diego:SANIT/app/src/main/java/br/com/lorencity/fotoesgoto/PhotoDataScreen.java
+
         }
     }
 

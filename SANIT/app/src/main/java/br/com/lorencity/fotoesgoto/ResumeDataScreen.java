@@ -1,7 +1,6 @@
 package br.com.lorencity.fotoesgoto;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.security.InvalidParameterException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ResumeDataScreen extends AppCompatActivity implements View.OnClickListener{
+public class
+        ResumeDataScreen extends AppCompatActivity implements View.OnClickListener{
 
     private TextView txtCPF;
     private TextView txtTipoProblema;
@@ -24,7 +26,7 @@ public class ResumeDataScreen extends AppCompatActivity implements View.OnClickL
     private TextView txtBairro;
     private TextView txtComplemento;
     private TextView txtCEP;
-
+    private ConnectClient conexao;
     private ImageView imgCamera;
 
     private Button btnConcluir;
@@ -78,6 +80,26 @@ public class ResumeDataScreen extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    public void onClick(View v) {
+        //Envio de informações
+        Map parametros = new HashMap();
+        parametros.put("cpf", txtCPF.getText().toString());
+        parametros.put("tipoProblema",txtTipoProblema.getText().toString());
+        parametros.put("endereco",txtEndereco.getText().toString());
+        parametros.put("bairro",txtBairro.getText().toString());
+        parametros.put("complemento",txtComplemento.getText().toString());
+        parametros.put("cep",txtCEP.getText().toString());
+        parametros.put("imagem",imgCamera.getDrawingCache());
+
+        conexao = new ConnectClient("http://192.168.1.100:8080/AndroidWeb/Resposta");
+        String resultado = conexao.doPost(parametros);
+        AlertDialog.Builder msg = new AlertDialog.Builder(this);
+        msg.setMessage(resultado);
+        msg.setNeutralButton("OK",null);
+        msg.show();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_resume_data_screen, menu);
@@ -99,17 +121,4 @@ public class ResumeDataScreen extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-        //Envio de informações
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Problema reportado com sucesso! Obrigado!!");
-        alert.setNeutralButton("Ok!", new AlertDialog.OnClickListener(){
-            public void onClick(DialogInterface d, int i){
-                finish();
-            }
-        });
-        alert.show();
-    }
 }
