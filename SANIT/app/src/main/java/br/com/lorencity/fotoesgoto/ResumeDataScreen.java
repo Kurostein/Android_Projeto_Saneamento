@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,9 +14,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import br.com.lorencity.connection.ServerConnection;
 
 public class
         ResumeDataScreen extends AppCompatActivity implements View.OnClickListener{
@@ -26,7 +34,6 @@ public class
     private TextView txtBairro;
     private TextView txtComplemento;
     private TextView txtCEP;
-    private ConnectClient conexao;
     private ImageView imgCamera;
 
     private Button btnConcluir;
@@ -82,21 +89,50 @@ public class
     @Override
     public void onClick(View v) {
         //Envio de informações
-        Map parametros = new HashMap();
+
+        //Transformar em métodos da classe, wrap de params com retorno String e conversão de BitMap to Base64 String
+
+        HashMap<String, String> parametros = new HashMap<>();
         parametros.put("cpf", txtCPF.getText().toString());
         parametros.put("tipoProblema",txtTipoProblema.getText().toString());
         parametros.put("endereco",txtEndereco.getText().toString());
         parametros.put("bairro",txtBairro.getText().toString());
         parametros.put("complemento",txtComplemento.getText().toString());
         parametros.put("cep",txtCEP.getText().toString());
-        parametros.put("imagem",imgCamera.getDrawingCache());
+        //parametros.put("imagem",imgCamera.getDrawingCache());
 
-        conexao = new ConnectClient("http://192.168.1.100:8080/AndroidWeb/Resposta");
-        String resultado = conexao.doPost(parametros);
-        AlertDialog.Builder msg = new AlertDialog.Builder(this);
-        msg.setMessage(resultado);
-        msg.setNeutralButton("OK",null);
-        msg.show();
+
+        /*
+         * Conexão com o servidor e envio de dados
+         */
+
+        String teste = "hello=Hello World";
+
+        ServerConnection serverConn = new ServerConnection();
+
+        try{
+            serverConn.setServerAddress(serverConn.getDefaultServerAddress());
+            serverConn.preparePostConnection();
+
+            String resultado = serverConn.startConnectionForResponse(teste);
+
+            AlertDialog.Builder msg = new AlertDialog.Builder(this);
+            msg.setMessage(resultado);
+            msg.setNeutralButton("OK",null);
+            msg.show();
+
+        }catch (IOException e){
+            AlertDialog.Builder msg = new AlertDialog.Builder(this);
+            msg.setMessage("Problema na escrita de dados.");
+            msg.setNeutralButton("OK",null);
+            msg.show();
+            return;
+        }catch (ExecutionException e){
+            Log.i("THREAD PRObLEM: ", "Problema na thread");
+        }catch (InterruptedException e){
+            Log.i("THREAD PRObLEM: ", "Problema na thread");
+        }
+
     }
 
     @Override
