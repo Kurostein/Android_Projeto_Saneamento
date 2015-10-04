@@ -128,9 +128,9 @@ public class
             msg.show();
             return;
         }catch (ExecutionException e){
-            Log.i("THREAD PRObLEM: ", "Problema na thread");
+            Log.i("THREAD PROBLEM: ", "Problema na thread");
         }catch (InterruptedException e){
-            Log.i("THREAD PRObLEM: ", "Problema na thread");
+            Log.i("THREAD PROBLEM: ", "Problema na thread");
         }
 
     }
