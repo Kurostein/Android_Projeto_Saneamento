@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
@@ -60,79 +62,85 @@ public class
         intent = getIntent();
 
         try{
-            if(!intent.hasExtra("BUNDLE")){
-                throw new InvalidParameterException("Parâmetro não encontrado!");
-            }
-            bundle = intent.getBundleExtra("BUNDLE");
-
-            txtCPF.setText(bundle.getString("VALUE_CPF"));
-            txtTipoProblema.setText(bundle.getString("VALUE_TIPO_PROBLEMA"));
-            txtEndereco.setText(bundle.getString("VALUE_ENDERECO"));
-            txtBairro.setText(bundle.getString("VALUE_BAIRRO"));
-            txtComplemento.setText(bundle.getString("VALUE_COMPLEMENTO"));
-            txtCEP.setText(bundle.getString("VALUE_CEP"));
-
-            byte[] imgByteArray = bundle.getByteArray("IMG_BYTE_ARRAY");
-            Bitmap img = BitmapFactory.decodeByteArray(imgByteArray, 0, imgByteArray.length);
-            imgCamera.setImageBitmap(img);
-
+            getResumedInfo();
         }catch(InvalidParameterException e){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.setNeutralButton("Ok", null);
-            alert.show();
+            showAlertDialogMsg(e.getMessage());
             return;
         }
 
     }
 
     @Override
-    public void onClick(View v) {
-        //Envio de informações
+    public void onClick(View v){
 
-        //Transformar em métodos da classe, wrap de params com retorno String e conversão de BitMap to Base64 String
+        //String teste = "hello=Hello World";
 
-        HashMap<String, String> parametros = new HashMap<>();
-        parametros.put("cpf", txtCPF.getText().toString());
-        parametros.put("tipoProblema",txtTipoProblema.getText().toString());
-        parametros.put("endereco",txtEndereco.getText().toString());
-        parametros.put("bairro",txtBairro.getText().toString());
-        parametros.put("complemento",txtComplemento.getText().toString());
-        parametros.put("cep",txtCEP.getText().toString());
-        //parametros.put("imagem",imgCamera.getDrawingCache());
+        //Params wrapping as String.
+        String paramList = wrapParamsAsJsonObject().toString();
 
-
-        /*
-         * Conexão com o servidor e envio de dados
-         */
-
-        String teste = "hello=Hello World";
-
-        ServerConnection serverConn = new ServerConnection();
-
+        //Conexão com o servidor e envio de dados
         try{
+            String serverResponse;
+            ServerConnection serverConn = new ServerConnection();
+
             serverConn.setServerAddress(serverConn.getDefaultServerAddress());
             serverConn.preparePostConnection();
 
-            String resultado = serverConn.startConnectionForResponse(teste);
+            serverResponse = serverConn.startConnectionForResponse(paramList);
 
-            AlertDialog.Builder msg = new AlertDialog.Builder(this);
-            msg.setMessage(resultado);
-            msg.setNeutralButton("OK",null);
-            msg.show();
+            showAlertDialogMsg(serverResponse);
 
         }catch (IOException e){
-            AlertDialog.Builder msg = new AlertDialog.Builder(this);
-            msg.setMessage("Problema na escrita de dados.");
-            msg.setNeutralButton("OK",null);
-            msg.show();
+            showAlertDialogMsg("Problema na escrita de dados.");
             return;
         }catch (ExecutionException e){
             Log.i("THREAD PROBLEM: ", "Problema na thread");
+            return;
         }catch (InterruptedException e){
             Log.i("THREAD PROBLEM: ", "Problema na thread");
+            return;
         }
 
+        finish();   //Finish the activity
+    }
+
+    private void getResumedInfo() throws InvalidParameterException{
+        if(!intent.hasExtra("BUNDLE")){
+            throw new InvalidParameterException("Parâmetro não encontrado!");
+        }
+        bundle = intent.getBundleExtra("BUNDLE");
+
+        txtCPF.setText(bundle.getString("VALUE_CPF"));
+        txtTipoProblema.setText(bundle.getString("VALUE_TIPO_PROBLEMA"));
+        txtEndereco.setText(bundle.getString("VALUE_ENDERECO"));
+        txtBairro.setText(bundle.getString("VALUE_BAIRRO"));
+        txtComplemento.setText(bundle.getString("VALUE_COMPLEMENTO"));
+        txtCEP.setText(bundle.getString("VALUE_CEP"));
+
+        byte[] imgByteArray = bundle.getByteArray("IMG_BYTE_ARRAY");
+        Bitmap img = BitmapFactory.decodeByteArray(imgByteArray, 0, imgByteArray.length);
+        imgCamera.setImageBitmap(img);
+    }
+
+    private JSONObject wrapParamsAsJsonObject(){
+        Map<String, String> params = new HashMap<>();
+
+        params.put("cpf", txtCPF.getText().toString());
+        params.put("tipoProblema", txtTipoProblema.getText().toString());
+        params.put("endereco", txtEndereco.getText().toString());
+        params.put("bairro", txtBairro.getText().toString());
+        params.put("complemento", txtComplemento.getText().toString());
+        params.put("cep", txtCEP.getText().toString());
+        //params.put("imagem",imgCamera.getDrawingCache());
+
+        return new JSONObject(params);
+    }
+
+    private void showAlertDialogMsg(String message){
+        AlertDialog.Builder msg = new AlertDialog.Builder(this);
+        msg.setMessage(message);
+        msg.setNeutralButton("OK",null);
+        msg.show();
     }
 
     @Override
