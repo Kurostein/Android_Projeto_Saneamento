@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,8 @@ public class
 
     private TextView txtCPF;
     private TextView txtTipoProblema;
-    private TextView txtEndereco;
+    private TextView txtLogradouro;
+    private TextView txtNumero;
     private TextView txtBairro;
     private TextView txtComplemento;
     private TextView txtCEP;
@@ -48,7 +48,8 @@ public class
 
         txtCPF = (TextView) findViewById(R.id.txtViewCPF);
         txtTipoProblema = (TextView) findViewById(R.id.txtViewTipoProblema);
-        txtEndereco = (TextView) findViewById(R.id.txtViewEndereco);
+        txtLogradouro = (TextView) findViewById(R.id.txtViewLogradouro);
+        txtNumero = (TextView) findViewById(R.id.txtViewNumero);
         txtBairro = (TextView) findViewById(R.id.txtViewBairro);
         txtComplemento = (TextView) findViewById(R.id.txtViewCompemento);
         txtCEP = (TextView) findViewById(R.id.txtViewCEP);
@@ -78,16 +79,9 @@ public class
             String serverResponse;
             ServerConnection serverConn = new ServerConnection();
 
-            //serverConn.setServerAddress(serverConn.getDefaultServerAddress());
-            //serverConn.openPostConnection();
-
             serverResponse = serverConn.startConnectionForResponse(paramList);
 
             showAlertDialogMsg(serverResponse);
-
-        //}catch (IOException e){
-        //    showAlertDialogMsg("Problema na escrita de dados.");
-        //    return;
         }catch (ExecutionException e){
             Log.i("THREAD PROBLEM: ", "Problema na thread");
             return;
@@ -106,7 +100,8 @@ public class
 
         txtCPF.setText(bundle.getString("VALUE_CPF"));
         txtTipoProblema.setText(bundle.getString("VALUE_TIPO_PROBLEMA"));
-        txtEndereco.setText(bundle.getString("VALUE_ENDERECO"));
+        txtLogradouro.setText(bundle.getString("VALUE_LOGRADOURO"));
+        txtNumero.setText(bundle.getString("VALUE_NUMERO"));
         txtBairro.setText(bundle.getString("VALUE_BAIRRO"));
         txtComplemento.setText(bundle.getString("VALUE_COMPLEMENTO"));
         txtCEP.setText(bundle.getString("VALUE_CEP"));
@@ -121,7 +116,8 @@ public class
 
         params.put("cpf", bundle.getString("VALUE_CPF"));
         params.put("tipoProblema", bundle.getString("VALUE_TIPO_PROBLEMA"));
-        params.put("endereco", bundle.getString("VALUE_ENDERECO"));
+        params.put("logradouro", bundle.getString("VALUE_LOGRADOURO"));
+        params.put("numero", bundle.getString("VALUE_NUMERO"));
         params.put("bairro", bundle.getString("VALUE_BAIRRO"));
         params.put("complemento", bundle.getString("VALUE_COMPLEMENTO"));
         params.put("cep", bundle.getString("VALUE_CEP"));

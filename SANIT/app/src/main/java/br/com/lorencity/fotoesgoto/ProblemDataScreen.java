@@ -17,10 +17,13 @@ import java.security.InvalidParameterException;
 public class ProblemDataScreen extends AppCompatActivity implements View.OnClickListener{
 
     private Button btnAvancar3;
-    private EditText fieldEndereco;
+
+    private EditText fieldLogradouro;
+    private EditText fieldNumero;
     private EditText fieldBairro;
     private EditText fieldComplemento;
     private EditText fieldCep;
+
     private Spinner spnTipoProblema;
     private ArrayAdapter<String> adpTipoProblema;
 
@@ -32,7 +35,8 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_problem_data_screen);
 
-        fieldEndereco = (EditText) findViewById(R.id.fieldEndereco);
+        fieldLogradouro = (EditText) findViewById(R.id.fieldLogradouro);
+        fieldNumero = (EditText) findViewById(R.id.fieldNumero);
         fieldBairro = (EditText) findViewById(R.id.fieldBairro);
         fieldComplemento = (EditText) findViewById(R.id.fieldComplemento);
         fieldCep = (EditText) findViewById(R.id.fieldCep);
@@ -42,7 +46,6 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
         btnAvancar3 = (Button) findViewById(R.id.btnAvancar3);
         btnAvancar3.setOnClickListener(this);
-
 
         adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adpTipoProblema.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -59,7 +62,8 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             }
 
             bundle = intent.getBundleExtra("BUNDLE");
-            bundle.putString("VALUE_ENDERECO", fieldEndereco.getText().toString());
+            bundle.putString("VALUE_LOGRADOURO", fieldLogradouro.getText().toString());
+            bundle.putString("VALUE_NUMERO", fieldNumero.getText().toString());
             bundle.putString("VALUE_BAIRRO", fieldBairro.getText().toString());
             bundle.putString("VALUE_COMPLEMENTO", fieldComplemento.getText().toString());
             bundle.putString("VALUE_CEP", fieldCep.getText().toString());

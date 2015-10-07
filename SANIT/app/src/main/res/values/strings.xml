@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Foto Esgoto</string>
-    <string name="title_activity_user_data_screen">Foto Esgoto</string>
-    <string name="title_activity_photo_data_screen">Foto Esgoto</string>
-    <string name="title_activity_problem_data_screen">Foto Esgoto</string>
+    <string name="app_name">SANIT</string>
+    <string name="title_activity_user_data_screen">SANIT</string>
+    <string name="title_activity_photo_data_screen">SANIT</string>
+    <string name="title_activity_problem_data_screen">SANIT</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -15,10 +15,13 @@
     <string name="label_foto_galeria">Escolha uma foto da galeria:</string>
     <string name="btn_label_camera">Tirar Foto!</string>
     <string name="btn_label_galeria">Galeria!</string>
-    <string name="label_endereco">Endereço:</string>
+
+    <string name="label_logradouro">Logradouro:</string>
+    <string name="label_numero">Número:</string>
     <string name="label_bairro">Bairro:</string>
     <string name="label_complemento">Complemento:</string>
     <string name="label_cep">CEP:</string>
+
     <string name="btn_label_concluir">Concluir!</string>
     <string name="title_activity_resume_data_screen">Foto Esgoto</string>
     <string name="label_resumo_info">Resumo de Informações:</string>

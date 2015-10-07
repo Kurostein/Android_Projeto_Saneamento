@@ -38,8 +38,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/txtViewEndereco"
+        android:id="@+id/txtViewLogradouro"
         android:text="Endereço"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Número"
+        android:id="@+id/txtViewNumero"
         android:layout_marginTop="15dp" />
 
     <TextView
