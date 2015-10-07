@@ -51,19 +51,18 @@ public class ServerConnection {
         this.httpConn.setDoOutput(true);
     }
 
-    public void preparePostConnection() throws IOException{
+    public void openPostConnection() throws IOException{
         prepareConnection();
         httpConn.setRequestMethod("POST");
+        httpConn.connect();
     }
 
-    public void prepareGetConnection() throws IOException{
+    public void openGetConnection() throws IOException{
         prepareConnection();
         httpConn.setRequestMethod("GET");
     }
 
     public void writeData(String data) throws IOException{
-        httpConn.connect();
-
         DataOutputStream dataStream = getDataOutStream();
 
         dataStream.writeBytes(data);
@@ -121,6 +120,9 @@ public class ServerConnection {
         protected String doInBackground(String... urls) {
             try {
                 Log.v(TAG, "In background");
+                Log.v(TAG, "In connection "+urls[0]);
+                setServerAddress(getDefaultServerAddress());
+                openPostConnection();
                 writeData(urls[0]);
                 Log.v(TAG, "Wrote data in server.");
                 return getServerResponseData();

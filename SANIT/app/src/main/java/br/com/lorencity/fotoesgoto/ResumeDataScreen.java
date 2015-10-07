@@ -1,6 +1,7 @@
 package br.com.lorencity.fotoesgoto;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +18,6 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,27 +70,24 @@ public class
 
     @Override
     public void onClick(View v){
-
-        //String teste = "hello=Hello World";
-
         //Params wrapping as String.
-        String paramList = wrapParamsAsJsonObject().toString();
+        String paramList = wrapParamsAsString();
 
         //Conexão com o servidor e envio de dados
         try{
             String serverResponse;
             ServerConnection serverConn = new ServerConnection();
 
-            serverConn.setServerAddress(serverConn.getDefaultServerAddress());
-            serverConn.preparePostConnection();
+            //serverConn.setServerAddress(serverConn.getDefaultServerAddress());
+            //serverConn.openPostConnection();
 
             serverResponse = serverConn.startConnectionForResponse(paramList);
 
             showAlertDialogMsg(serverResponse);
 
-        }catch (IOException e){
-            showAlertDialogMsg("Problema na escrita de dados.");
-            return;
+        //}catch (IOException e){
+        //    showAlertDialogMsg("Problema na escrita de dados.");
+        //    return;
         }catch (ExecutionException e){
             Log.i("THREAD PROBLEM: ", "Problema na thread");
             return;
@@ -101,7 +96,6 @@ public class
             return;
         }
 
-        finish();   //Finish the activity
     }
 
     private void getResumedInfo() throws InvalidParameterException{
@@ -122,24 +116,37 @@ public class
         imgCamera.setImageBitmap(img);
     }
 
-    private JSONObject wrapParamsAsJsonObject(){
+    private String wrapParamsAsString(){
         Map<String, String> params = new HashMap<>();
 
-        params.put("cpf", txtCPF.getText().toString());
-        params.put("tipoProblema", txtTipoProblema.getText().toString());
-        params.put("endereco", txtEndereco.getText().toString());
-        params.put("bairro", txtBairro.getText().toString());
-        params.put("complemento", txtComplemento.getText().toString());
-        params.put("cep", txtCEP.getText().toString());
-        //params.put("imagem",imgCamera.getDrawingCache());
+        params.put("cpf", bundle.getString("VALUE_CPF"));
+        params.put("tipoProblema", bundle.getString("VALUE_TIPO_PROBLEMA"));
+        params.put("endereco", bundle.getString("VALUE_ENDERECO"));
+        params.put("bairro", bundle.getString("VALUE_BAIRRO"));
+        params.put("complemento", bundle.getString("VALUE_COMPLEMENTO"));
+        params.put("cep", bundle.getString("VALUE_CEP"));
+        params.put("imagem", bundle.getByteArray("IMG_BYTE_ARRAY").toString());
 
-        return new JSONObject(params);
+        String action = "action=insert";
+        String jsonParams = "jsonParams="+formatAsJsonString(params);
+
+        String appDataTag = action+"&"+jsonParams;
+        return appDataTag;
+    }
+
+    private String formatAsJsonString(Map<String, String> params){
+        return new JSONObject(params).toString();
     }
 
     private void showAlertDialogMsg(String message){
         AlertDialog.Builder msg = new AlertDialog.Builder(this);
         msg.setMessage(message);
-        msg.setNeutralButton("OK",null);
+        msg.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
         msg.show();
     }
 
