@@ -1,8 +1,11 @@
 package br.com.lorencity.connection;
 
 import android.os.AsyncTask;
+import android.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -47,8 +50,11 @@ public class ServerConnection {
         URLConnection urlConn = url.openConnection();
 
         this.httpConn = (HttpURLConnection) urlConn;
+        this.httpConn.setReadTimeout(10000);
+        this.httpConn.setConnectTimeout(15000);
         this.httpConn.setDoInput(true);
         this.httpConn.setDoOutput(true);
+        this.httpConn.setUseCaches(false);
     }
 
     public void openPostConnection() throws IOException{
@@ -65,7 +71,7 @@ public class ServerConnection {
     public void writeData(String data) throws IOException{
         DataOutputStream dataStream = getDataOutStream();
 
-        dataStream.writeBytes(data);
+        dataStream.writeUTF(data);
         dataStream.flush();
         dataStream.close();
     }

@@ -92,7 +92,7 @@ public class PhotoDataScreen extends Activity implements View.OnClickListener{
 
             if(bitmapImg != null){
                 ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
-                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 50, imgOutput);
+                bitmapImg.compress(Bitmap.CompressFormat.JPEG, 100, imgOutput);
                 bundle.putByteArray("IMG_BYTE_ARRAY", imgOutput.toByteArray());
                 //coloca a imagem como um Array de Bytes no bundle
             }else{

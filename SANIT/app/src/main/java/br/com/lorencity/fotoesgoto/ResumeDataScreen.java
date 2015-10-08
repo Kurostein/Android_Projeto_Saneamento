@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -114,6 +115,10 @@ public class
     private String wrapParamsAsString(){
         Map<String, String> params = new HashMap<>();
 
+        String base64Img = Base64.encodeToString(bundle.getByteArray("IMG_BYTE_ARRAY"), Base64.DEFAULT);
+        String action = "insert";
+
+        params.put("action", action);
         params.put("cpf", bundle.getString("VALUE_CPF"));
         params.put("tipoProblema", bundle.getString("VALUE_TIPO_PROBLEMA"));
         params.put("logradouro", bundle.getString("VALUE_LOGRADOURO"));
@@ -121,13 +126,11 @@ public class
         params.put("bairro", bundle.getString("VALUE_BAIRRO"));
         params.put("complemento", bundle.getString("VALUE_COMPLEMENTO"));
         params.put("cep", bundle.getString("VALUE_CEP"));
-        params.put("imagem", bundle.getByteArray("IMG_BYTE_ARRAY").toString());
+        params.put("imagem", base64Img);
 
-        String action = "action=insert";
-        String jsonParams = "jsonParams="+formatAsJsonString(params);
+        String jsonString = formatAsJsonString(params);
 
-        String appDataTag = action+"&"+jsonParams;
-        return appDataTag;
+        return Base64.encodeToString(jsonString.getBytes(), Base64.DEFAULT);
     }
 
     private String formatAsJsonString(Map<String, String> params){
