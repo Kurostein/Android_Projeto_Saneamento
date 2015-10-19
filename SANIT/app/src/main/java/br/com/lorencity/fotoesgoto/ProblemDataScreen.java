@@ -1,9 +1,12 @@
 package br.com.lorencity.fotoesgoto;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.InvalidParameterException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import br.com.lorencity.connection.ServerConnection;
 
 public class ProblemDataScreen extends AppCompatActivity implements View.OnClickListener{
 
@@ -40,17 +52,15 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         fieldBairro = (EditText) findViewById(R.id.fieldBairro);
         fieldComplemento = (EditText) findViewById(R.id.fieldComplemento);
         fieldCep = (EditText) findViewById(R.id.fieldCep);
+        fieldCep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, fieldCep));
         spnTipoProblema = (Spinner) findViewById(R.id.spnTipoProblema);
 
-        //verificar se os parametros existem
+        //init spinner
+        getListaTipoProblemas();
 
         btnAvancar3 = (Button) findViewById(R.id.btnAvancar3);
         btnAvancar3.setOnClickListener(this);
 
-        adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpTipoProblema.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adpTipoProblema.addAll("Vazamento de água", "Vazamento de esgoto");
-        spnTipoProblema.setAdapter(adpTipoProblema);
 
         intent = getIntent();
     }
@@ -61,6 +71,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
                 throw new InvalidParameterException("Parâmetro não encontrado!");
             }
 
+            //Verificar se os parametros importantes foram preenchidos
             bundle = intent.getBundleExtra("BUNDLE");
             bundle.putString("VALUE_LOGRADOURO", fieldLogradouro.getText().toString());
             bundle.putString("VALUE_NUMERO", fieldNumero.getText().toString());
@@ -76,10 +87,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             finish();
 
         }catch(InvalidParameterException e){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(e.getMessage());
-            alert.setNeutralButton("Ok", null);
-            alert.show();
+            showAlertDialogMsg(e.getMessage());
             return;
         }
     }
@@ -105,4 +113,62 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void getListaTipoProblemas(){
+        JSONArray jsonArrayProblemas;
+
+        adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        adpTipoProblema.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        try{
+            String response = connectServerToGetList();
+            jsonArrayProblemas = new JSONArray(response);
+
+            for(int i=0; i<jsonArrayProblemas.length(); i++){
+                adpTipoProblema.add(jsonArrayProblemas.getString(i));
+            }
+
+            spnTipoProblema.setAdapter(adpTipoProblema);
+
+        }catch (ExecutionException e){
+            showAlertDialogMsg("Problema na conexão de dados.");
+            return;
+        }catch (InterruptedException e){
+            showAlertDialogMsg("Problema na conexão de dados.");
+            return;
+        }catch (JSONException e){
+            showAlertDialogMsg("Problema na conversão de dados.");
+            return;
+        }
+    }
+
+    private String connectServerToGetList() throws JSONException, InterruptedException, ExecutionException{
+        Map<String, String> params;
+        String paramBase64;
+        String response;
+        JSONObject json;
+
+        params = new HashMap<>();
+        params.put("action", "consultar");
+        json = new JSONObject(params);
+        paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
+
+        ServerConnection serverConn = new ServerConnection();
+        response = serverConn.startConnectionForResponse(paramBase64);
+
+        return response;
+    }
+
+    private void showAlertDialogMsg(String message){
+        AlertDialog.Builder msg = new AlertDialog.Builder(this);
+        msg.setMessage(message);
+        msg.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        msg.show();
+    }
+
 }

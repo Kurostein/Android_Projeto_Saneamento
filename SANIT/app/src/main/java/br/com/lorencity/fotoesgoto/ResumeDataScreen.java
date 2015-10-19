@@ -116,7 +116,7 @@ public class
         Map<String, String> params = new HashMap<>();
 
         String base64Img = Base64.encodeToString(bundle.getByteArray("IMG_BYTE_ARRAY"), Base64.DEFAULT);
-        String action = "insert";
+        String action = "inserir";
 
         params.put("action", action);
         params.put("cpf", bundle.getString("VALUE_CPF"));

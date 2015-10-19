@@ -109,7 +109,7 @@ public class ServerConnection {
                 sBuilder.append(line + " ");
             }
         }catch (IOException e){
-            Log.i("STRING CONVERSION FAILED: ", e.toString());
+            Log.i("STRING APPEND ERROR", e.toString());
         }
 
         bufReader.close();
