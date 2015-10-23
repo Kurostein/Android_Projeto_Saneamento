@@ -149,7 +149,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         JSONObject json;
 
         params = new HashMap<>();
-        params.put("action", "consultar");
+        params.put("action", "consultarProblemas");
         json = new JSONObject(params);
         paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
 

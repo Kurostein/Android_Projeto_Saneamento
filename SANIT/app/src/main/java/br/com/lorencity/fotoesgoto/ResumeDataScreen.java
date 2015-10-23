@@ -119,7 +119,7 @@ public class
         String action = "inserir";
 
         params.put("action", action);
-        params.put("cpf", bundle.getString("VALUE_CPF"));
+        //params.put("cpf", bundle.getString("VALUE_CPF"));
         params.put("tipoProblema", bundle.getString("VALUE_TIPO_PROBLEMA"));
         params.put("logradouro", bundle.getString("VALUE_LOGRADOURO"));
         params.put("numero", bundle.getString("VALUE_NUMERO"));
