@@ -24,7 +24,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     public void onClick (View v){
-        Intent intent = new Intent(this, UserDataScreen.class);
+        Intent intent = new Intent(this, PhotoDataScreen.class);
         startActivity(intent);
     }
 

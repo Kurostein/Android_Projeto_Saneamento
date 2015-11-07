@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +37,8 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
     private Spinner spnTipoProblema;
     private ArrayAdapter<String> adpTipoProblema;
+    private Spinner spnBairro;
+    private ArrayAdapter<String> adpBairro;
 
     private Bundle bundle;
     private Intent intent;
@@ -54,9 +55,10 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         fieldCep = (EditText) findViewById(R.id.fieldCep);
         fieldCep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, fieldCep));
         spnTipoProblema = (Spinner) findViewById(R.id.spnTipoProblema);
+        spnBairro = (Spinner) findViewById(R.id.spnBairro);
 
         //init spinner
-        getListaTipoProblemas();
+        initSpinners();
 
         btnAvancar3 = (Button) findViewById(R.id.btnAvancar3);
         btnAvancar3.setOnClickListener(this);
@@ -75,7 +77,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             bundle = intent.getBundleExtra("BUNDLE");
             bundle.putString("VALUE_LOGRADOURO", fieldLogradouro.getText().toString());
             bundle.putString("VALUE_NUMERO", fieldNumero.getText().toString());
-            bundle.putString("VALUE_BAIRRO", fieldBairro.getText().toString());
+            bundle.putString("VALUE_BAIRRO", spnBairro.getSelectedItem().toString());
             bundle.putString("VALUE_COMPLEMENTO", fieldComplemento.getText().toString());
             bundle.putString("VALUE_CEP", fieldCep.getText().toString());
             bundle.putString("VALUE_TIPO_PROBLEMA", spnTipoProblema.getSelectedItem().toString());
@@ -114,21 +116,35 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         return super.onOptionsItemSelected(item);
     }
 
-    private void getListaTipoProblemas(){
-        JSONArray jsonArrayProblemas;
+    private void initSpinners(){
+        JSONArray auxJsonArray;
 
         adpTipoProblema = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adpTipoProblema.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        try{
-            String response = connectServerToGetList();
-            jsonArrayProblemas = new JSONArray(response);
+        adpBairro = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        adpBairro.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            for(int i=0; i<jsonArrayProblemas.length(); i++){
-                adpTipoProblema.add(jsonArrayProblemas.getString(i));
+        try{
+            //Buscando dados de problemas do banco
+            String response = connectServerToGetProblemas();
+            auxJsonArray = new JSONArray(response);
+
+            for(int i=0; i<auxJsonArray.length(); i++){
+                adpTipoProblema.add(auxJsonArray.getString(i));
             }
 
             spnTipoProblema.setAdapter(adpTipoProblema);
+
+            //Buscando dados de bairros do banco
+            response = connectServerToGetBairros();
+            auxJsonArray = new JSONArray(response);
+
+            for(int i=0; i<auxJsonArray.length(); i++){
+                adpBairro.add(auxJsonArray.getString(i));
+            }
+
+            spnBairro.setAdapter(adpBairro);
 
         }catch (ExecutionException e){
             showAlertDialogMsg("Problema na conexão de dados.");
@@ -142,7 +158,7 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private String connectServerToGetList() throws JSONException, InterruptedException, ExecutionException{
+    private String connectServerToGetProblemas() throws JSONException, InterruptedException, ExecutionException{
         Map<String, String> params;
         String paramBase64;
         String response;
@@ -150,6 +166,23 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
         params = new HashMap<>();
         params.put("action", "consultarProblemas");
+        json = new JSONObject(params);
+        paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
+
+        ServerConnection serverConn = new ServerConnection();
+        response = serverConn.startConnectionForResponse(paramBase64);
+
+        return response;
+    }
+
+    private String connectServerToGetBairros() throws JSONException, InterruptedException, ExecutionException{
+        Map<String, String> params;
+        String paramBase64;
+        String response;
+        JSONObject json;
+
+        params = new HashMap<>();
+        params.put("action", "consultarBairros");
         json = new JSONObject(params);
         paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
 
