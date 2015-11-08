@@ -125,9 +125,11 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         adpBairro = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adpBairro.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        String response = null;
+
         try{
             //Buscando dados de problemas do banco
-            String response = connectServerToGetProblemas();
+            response = connectServerToGetProblemas();
             auxJsonArray = new JSONArray(response);
 
             for(int i=0; i<auxJsonArray.length(); i++){
@@ -153,7 +155,8 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             showAlertDialogMsg("Problema na conexão de dados.");
             return;
         }catch (JSONException e){
-            showAlertDialogMsg("Problema na conversão de dados.");
+            showAlertDialogMsg(response);
+            //showAlertDialogMsg("Problema na conversão de dados.");
             return;
         }
     }

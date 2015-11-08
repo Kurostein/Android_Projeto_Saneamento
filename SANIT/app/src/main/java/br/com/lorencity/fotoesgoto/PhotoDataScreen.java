@@ -84,11 +84,7 @@ public class PhotoDataScreen extends Activity implements View.OnClickListener{
     }
 
     private void setImgToBundle() {
-            if (!intent.hasExtra("BUNDLE")) {
-                throw new InvalidParameterException("Parâmetro não encontrado!");
-            }
-
-            bundle = intent.getBundleExtra("BUNDLE");
+            bundle = new Bundle();
 
             if(bitmapImg != null){
                 ByteArrayOutputStream imgOutput = new ByteArrayOutputStream();
