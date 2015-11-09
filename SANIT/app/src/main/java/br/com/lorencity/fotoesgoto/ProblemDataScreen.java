@@ -163,34 +163,36 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
 
     private String connectServerToGetProblemas() throws JSONException, InterruptedException, ExecutionException{
         Map<String, String> params;
-        String paramBase64;
+        String request;
         String response;
         JSONObject json;
 
         params = new HashMap<>();
         params.put("action", "consultarProblemas");
+
         json = new JSONObject(params);
-        paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
+        request = "params="+json;
 
         ServerConnection serverConn = new ServerConnection();
-        response = serverConn.startConnectionForResponse(paramBase64);
+        response = serverConn.sendTextDataToServer(request);
 
         return response;
     }
 
     private String connectServerToGetBairros() throws JSONException, InterruptedException, ExecutionException{
         Map<String, String> params;
-        String paramBase64;
+        String request;
         String response;
         JSONObject json;
 
         params = new HashMap<>();
         params.put("action", "consultarBairros");
+
         json = new JSONObject(params);
-        paramBase64 = Base64.encodeToString(json.toString().getBytes(), Base64.DEFAULT);
+        request = "params="+json;
 
         ServerConnection serverConn = new ServerConnection();
-        response = serverConn.startConnectionForResponse(paramBase64);
+        response = serverConn.sendTextDataToServer(request);
 
         return response;
     }

@@ -1,11 +1,8 @@
 package br.com.lorencity.connection;
 
 import android.os.AsyncTask;
-import android.util.Base64;
-import android.util.Base64OutputStream;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,7 +23,8 @@ public class ServerConnection {
     private static final String TAG = "PROCESS STAGE";
 
     private URL url;
-    private String defaultServerAddress = "http://10.0.2.2:8080/SANIT/ServletUsuario";
+    private String imageServletAddress = "http://10.0.2.2:8080/SANIT/ServletImagem";
+    private String userServletAddress = "http://10.0.2.2:8080/SANIT/ServletUsuario";
 
     private HttpURLConnection httpConn;
 
@@ -38,12 +36,20 @@ public class ServerConnection {
         this.url = new URL(url);
     }
 
-    public String getDefaultServerAddress(){
-        return this.defaultServerAddress;
+    public String getImageServletAddress(){
+        return this.imageServletAddress;
     }
 
-    public String startConnectionForResponse(String data) throws ExecutionException, InterruptedException {
-        return new DataSenderTask().execute(data).get();
+    public String getUserServletAddress(){
+        return this.userServletAddress;
+    }
+
+    public String sendImageToServer(String data) throws ExecutionException, InterruptedException {
+        return new ImageDataWriterTask().execute(data).get();
+    }
+
+    public String sendTextDataToServer(String data) throws ExecutionException, InterruptedException{
+        return new TextDataWriterTask().execute(data).get();
     }
 
     private void prepareConnection() throws IOException{
@@ -68,10 +74,18 @@ public class ServerConnection {
         httpConn.setRequestMethod("GET");
     }
 
-    public void writeData(String data) throws IOException{
+    public void writeDataUTF(String data) throws IOException{
         DataOutputStream dataStream = getDataOutStream();
 
         dataStream.writeUTF(data);
+        dataStream.flush();
+        dataStream.close();
+    }
+
+    public void writeData(String data) throws IOException{
+        DataOutputStream dataStream = getDataOutStream();
+
+        dataStream.writeBytes(data);
         dataStream.flush();
         dataStream.close();
     }
@@ -120,14 +134,32 @@ public class ServerConnection {
         httpConn.disconnect();
     }
 
-    private class DataSenderTask extends AsyncTask<String, Void, String>{
+    private class ImageDataWriterTask extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... urls) {
             try {
                 Log.v(TAG, "In background");
-                Log.v(TAG, "In connection "+urls[0]);
-                setServerAddress(getDefaultServerAddress());
+                Log.v(TAG, "In connection: "+"Encoded imagem, sendding to server.");
+                setServerAddress(getImageServletAddress());
+                openPostConnection();
+                writeDataUTF(urls[0]);
+                Log.v(TAG, "Wrote data in server.");
+                return getServerResponseData();
+            }catch (IOException e){
+                return e.getMessage();
+            }
+        }
+    }
+
+    private class TextDataWriterTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                Log.v(TAG, "In background");
+                Log.v(TAG, "In connection: "+"Text data, sendding to server. ("+urls[0]+")");
+                setServerAddress(getUserServletAddress());
                 openPostConnection();
                 writeData(urls[0]);
                 Log.v(TAG, "Wrote data in server.");

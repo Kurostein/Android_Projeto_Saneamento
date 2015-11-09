@@ -72,15 +72,23 @@ public class
 
     @Override
     public void onClick(View v){
-        //Params wrapping as String.
-        String paramList = wrapParamsAsString();
+        String textParams;
+        String serverResponse;
+        String encodedImage;
+        String imageFilePath;
+
+        ServerConnection serverConn;
 
         //Conexão com o servidor e envio de dados
         try{
-            String serverResponse;
-            ServerConnection serverConn = new ServerConnection();
+            serverConn = new ServerConnection();
 
-            serverResponse = serverConn.startConnectionForResponse(paramList);
+            encodedImage = encodeImageFile(bundle.getByteArray("IMG_BYTE_ARRAY"));
+            imageFilePath = serverConn.sendImageToServer(encodedImage);
+
+            textParams = prepareTextParamsToWrite(bundle, imageFilePath);
+
+            serverResponse = serverConn.sendTextDataToServer(textParams);
 
             showAlertDialogMsg(serverResponse);
         }catch (ExecutionException e){
@@ -99,7 +107,6 @@ public class
         }
         bundle = intent.getBundleExtra("BUNDLE");
 
-        txtCPF.setText(bundle.getString("VALUE_CPF"));
         txtTipoProblema.setText(bundle.getString("VALUE_TIPO_PROBLEMA"));
         txtLogradouro.setText(bundle.getString("VALUE_LOGRADOURO"));
         txtNumero.setText(bundle.getString("VALUE_NUMERO"));
@@ -112,25 +119,27 @@ public class
         imgCamera.setImageBitmap(img);
     }
 
-    private String wrapParamsAsString(){
+    private String encodeImageFile(byte[] image){
+        return Base64.encodeToString(image, Base64.DEFAULT);
+    }
+
+    private String prepareTextParamsToWrite(Bundle bundle, String imageFilePath){
         Map<String, String> params = new HashMap<>();
 
-        String base64Img = Base64.encodeToString(bundle.getByteArray("IMG_BYTE_ARRAY"), Base64.DEFAULT);
         String action = "inserir";
 
         params.put("action", action);
-        //params.put("cpf", bundle.getString("VALUE_CPF"));
         params.put("tipoProblema", bundle.getString("VALUE_TIPO_PROBLEMA"));
         params.put("logradouro", bundle.getString("VALUE_LOGRADOURO"));
         params.put("numero", bundle.getString("VALUE_NUMERO"));
         params.put("bairro", bundle.getString("VALUE_BAIRRO"));
         params.put("complemento", bundle.getString("VALUE_COMPLEMENTO"));
         params.put("cep", bundle.getString("VALUE_CEP"));
-        params.put("imagem", base64Img);
+        params.put("imagem", imageFilePath);
 
-        String jsonString = formatAsJsonString(params);
+        String jsonString = "params="+formatAsJsonString(params);
 
-        return Base64.encodeToString(jsonString.getBytes(), Base64.DEFAULT);
+        return jsonString;
     }
 
     private String formatAsJsonString(Map<String, String> params){
