@@ -25,6 +25,9 @@ public class ServerConnection {
     private URL url;
     private String imageServletAddress = "http://10.0.2.2:8080/SANIT/ServletImagem";
     private String userServletAddress = "http://10.0.2.2:8080/SANIT/ServletUsuario";
+    private String bairrosServletAddress = "http://10.0.2.2:8080/SANIT/ServletBairros";
+    private String problemasServletAddress = "http://10.0.2.2:8080/SANIT/ServletProblemas";
+
 
     private HttpURLConnection httpConn;
 
@@ -42,6 +45,14 @@ public class ServerConnection {
 
     public String getUserServletAddress(){
         return this.userServletAddress;
+    }
+
+    public String getBairrosServletAddress(){
+        return this.bairrosServletAddress;
+    }
+
+    public String getProblemasServletAddress(){
+        return this.problemasServletAddress;
     }
 
     public String sendImageToServer(String data) throws ExecutionException, InterruptedException {
@@ -158,8 +169,7 @@ public class ServerConnection {
         protected String doInBackground(String... urls) {
             try {
                 Log.v(TAG, "In background");
-                Log.v(TAG, "In connection: "+"Text data, sendding to server. ("+urls[0]+")");
-                setServerAddress(getUserServletAddress());
+                Log.v(TAG, "In connection: " + "Text data, sendding to server. (" + urls[0] + ")");
                 openPostConnection();
                 writeData(urls[0]);
                 Log.v(TAG, "Wrote data in server.");

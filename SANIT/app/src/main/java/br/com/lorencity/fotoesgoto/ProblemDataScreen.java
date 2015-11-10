@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,6 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         btnAvancar3 = (Button) findViewById(R.id.btnAvancar3);
         btnAvancar3.setOnClickListener(this);
 
-
         intent = getIntent();
     }
 
@@ -73,7 +73,11 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
                 throw new InvalidParameterException("Parâmetro não encontrado!");
             }
 
-            //Verificar se os parametros importantes foram preenchidos
+            //Verifica se os parametros importantes foram preenchidos
+            if(!checkForEmptyFields()){
+                throw new IllegalArgumentException("Todos os campos com * devem ser preenchidos.");
+            }
+
             bundle = intent.getBundleExtra("BUNDLE");
             bundle.putString("VALUE_LOGRADOURO", fieldLogradouro.getText().toString());
             bundle.putString("VALUE_NUMERO", fieldNumero.getText().toString());
@@ -91,6 +95,11 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
         }catch(InvalidParameterException e){
             showAlertDialogMsg(e.getMessage());
             return;
+        }catch (IllegalArgumentException e){
+            AlertDialog.Builder msg = new AlertDialog.Builder(this);
+            msg.setMessage(e.getMessage());
+            msg.setNeutralButton("OK", null);
+            msg.show();
         }
     }
 
@@ -132,16 +141,17 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             response = connectServerToGetProblemas();
             auxJsonArray = new JSONArray(response);
 
+            adpTipoProblema.add("Selecione um problema");
             for(int i=0; i<auxJsonArray.length(); i++){
                 adpTipoProblema.add(auxJsonArray.getString(i));
             }
-
             spnTipoProblema.setAdapter(adpTipoProblema);
 
             //Buscando dados de bairros do banco
             response = connectServerToGetBairros();
             auxJsonArray = new JSONArray(response);
 
+            adpBairro.add("Selecione um bairro");
             for(int i=0; i<auxJsonArray.length(); i++){
                 adpBairro.add(auxJsonArray.getString(i));
             }
@@ -156,42 +166,34 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             return;
         }catch (JSONException e){
             showAlertDialogMsg(response);
-            //showAlertDialogMsg("Problema na conversão de dados.");
+            return;
+        }catch (MalformedURLException e){
+            showAlertDialogMsg("Erro no endereço de conexão com o servidor.");
             return;
         }
     }
 
-    private String connectServerToGetProblemas() throws JSONException, InterruptedException, ExecutionException{
-        Map<String, String> params;
+    private String connectServerToGetProblemas() throws JSONException, InterruptedException, ExecutionException, MalformedURLException{
         String request;
         String response;
-        JSONObject json;
 
-        params = new HashMap<>();
-        params.put("action", "consultarProblemas");
-
-        json = new JSONObject(params);
-        request = "params="+json;
+        request = "action=consultarProblemasJson";
 
         ServerConnection serverConn = new ServerConnection();
+        serverConn.setServerAddress(serverConn.getProblemasServletAddress());
         response = serverConn.sendTextDataToServer(request);
 
         return response;
     }
 
-    private String connectServerToGetBairros() throws JSONException, InterruptedException, ExecutionException{
-        Map<String, String> params;
+    private String connectServerToGetBairros() throws JSONException, InterruptedException, ExecutionException, MalformedURLException{
         String request;
         String response;
-        JSONObject json;
 
-        params = new HashMap<>();
-        params.put("action", "consultarBairros");
-
-        json = new JSONObject(params);
-        request = "params="+json;
+        request = "action=consultarBairrosJson";
 
         ServerConnection serverConn = new ServerConnection();
+        serverConn.setServerAddress(serverConn.getBairrosServletAddress());
         response = serverConn.sendTextDataToServer(request);
 
         return response;
@@ -207,6 +209,31 @@ public class ProblemDataScreen extends AppCompatActivity implements View.OnClick
             }
         });
         msg.show();
+    }
+
+    private boolean checkForEmptyFields(){
+
+        if(spnTipoProblema.getSelectedItem().toString() == null
+                || spnTipoProblema.getSelectedItem().toString().equals("")
+                || spnTipoProblema.getSelectedItem().toString().equals("Selecione um problema")){
+            return false;
+        } else
+        if (fieldLogradouro.getText().toString() == null || fieldLogradouro.getText().toString().equals("")){
+            return false;
+        } else
+        if(fieldNumero.getText().toString() == null || fieldNumero.getText().toString().equals("")){
+            return false;
+        } else
+        if(spnBairro.getSelectedItem().toString() == null
+                || spnBairro.getSelectedItem().toString().equals("")
+                || spnBairro.getSelectedItem().toString().equals("Selecione um bairro")){
+            return false;
+        } else
+        if(fieldCep.getText().toString() == null || fieldCep.getText().toString().equals("")){
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

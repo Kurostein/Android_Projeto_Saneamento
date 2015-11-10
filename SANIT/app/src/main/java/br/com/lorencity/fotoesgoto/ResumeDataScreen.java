@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,6 +89,7 @@ public class
 
             textParams = prepareTextParamsToWrite(bundle, imageFilePath);
 
+            serverConn.setServerAddress(serverConn.getUserServletAddress());
             serverResponse = serverConn.sendTextDataToServer(textParams);
 
             showAlertDialogMsg(serverResponse);
@@ -96,6 +98,9 @@ public class
             return;
         }catch (InterruptedException e){
             Log.i("THREAD PROBLEM: ", "Problema na thread");
+            return;
+        }catch (MalformedURLException e){
+            showAlertDialogMsg("Erro no endereço de conexão com o servidor.");
             return;
         }
 
