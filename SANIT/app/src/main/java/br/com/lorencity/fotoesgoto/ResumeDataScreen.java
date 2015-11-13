@@ -29,7 +29,6 @@ import br.com.lorencity.connection.ServerConnection;
 public class
         ResumeDataScreen extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView txtCPF;
     private TextView txtTipoProblema;
     private TextView txtLogradouro;
     private TextView txtNumero;
@@ -48,7 +47,6 @@ public class
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resume_data_screen);
 
-        txtCPF = (TextView) findViewById(R.id.txtViewCPF);
         txtTipoProblema = (TextView) findViewById(R.id.txtViewTipoProblema);
         txtLogradouro = (TextView) findViewById(R.id.txtViewLogradouro);
         txtNumero = (TextView) findViewById(R.id.txtViewNumero);
